@@ -1,0 +1,56 @@
+1. Install linux subsystem, follow the following guide
+https://github.com/rogerwschmidt/dbtest.git
+
+2. Start the bash console.
+
+3. In bash, this will install all the necessary software.
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install -y nodejs
+sudo apt-get install postgresql
+
+4. Run `sudo service postgresql start` to start the database service
+
+5. Run `sudo passwd postgres` to create a password for the user postgres
+
+6. Run `su postgres` to login as the postgres user, you’ll need the password from the previous step
+
+7. Run `createuser -s ‘your_user_name’`. Make sure it is your username
+
+8. Run `exit` to exit the prompt for the `postgres` user and return to your user prompt
+
+9. Run `createdb 'user'` to create a database for your own user.
+
+10. Run `sudo nano /etc/postgresql/9.5/main/pg_hba.conf` to edit that particular file, change it to the following
+
+# Database administrative login by Unix domain socket
+local   all             postgres                                ident
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     ident
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+#local   replication     postgres                                peer
+#host    replication     postgres        127.0.0.1/32            md5
+#host    replication     postgres        ::1/128                 md5
+
+
+
+
+11. Go to your home directory, `cd ~`
+
+12. Create a database, `createdb test`
+
+13. Run `git clone  https://github.com/rogerwschmidt/dbtest.git` to download code
+
+14. Run `npm install` to install dependencies
+
+15. Run `./node_modules/.bin/knex migrate:latest` to test if your setup is working.
+
