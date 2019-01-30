@@ -1,0 +1,199 @@
+select userid
+from users
+where campaign_id = 'FB';
+
+
+SELECT COUNT(*) FROM users;
+
+select count(userid)
+from users
+where campaign_id = 'FB';
+
+
+readychef-# group by campaign_id;
+ count | campaign_id 
+-------+-------------
+  2192 | FB
+   862 | RE
+   588 | PI
+  1882 | TW
+(4 rows)
+
+
+
+select count(userid), campaign_id
+from users
+group by campaign_id;
+
+
+readychef-# group by campaign_id;
+ count | campaign_id 
+-------+-------------
+  2192 | FB
+   862 | RE
+   588 | PI
+  1882 | TW
+(4 rows)
+
+
+select *
+from users
+limit 10;
+
+select min(dt), max(dt)
+from users;
+
+readychef-# from users;
+    min     |    max     
+------------+------------
+ 2013-01-01 | 2013-12-31
+(1 row)
+
+
+select *
+from meals
+limit 5;
+
+select avg(price)
+from meals;
+
+
+
+
+readychef-# from meals;
+         avg         
+---------------------
+ 10.6522829904666332
+
+select type, date_part('month', dt), date_part('year', dt), avg(price) as avg, min(price), max(price)
+from meals
+where date_part('month', dt) <= 3 and date_part('year', dt) = 2013
+group by type;
+
+
+readychef-# group by type;
+    type    |         avg         | min | max 
+------------+---------------------+-----+-----
+ mexican    |  9.6975945017182131 |   6 |  13
+ italian    | 11.2926136363636364 |   7 |  16
+ chinese    |  9.5187165775401070 |   6 |  13
+ french     | 11.5420000000000000 |   7 |  16
+ japanese   |  9.3804878048780488 |   6 |  13
+ vietnamese |  9.2830188679245283 |   6 |  13
+(6 rows)
+
+
+
+
+select type, date_part('month', dt), date_part('year', dt), avg(price) as avg, min(price), max(price)
+from meals
+where date_part('month', dt) <= 3 and date_part('year', dt) = 2013
+group by 1,2,3;
+
+
+select *
+from events
+limit 3;
+
+
+
+select meal_id, event, SUM(CASE WHEN event='bought' THEN 1 ELSE 0 END) as bought
+from events
+group by 1,2;
+
+
+select type, avg(price) as avg_price
+from meals
+group by 1
+order by avg(price);
+ 
+
+
+select type, avg(price) as avg_price
+from meals
+group by 1
+order by avg(price) desc;
+
+    type    |      avg_price      
+------------+---------------------
+ french     | 11.5420000000000000
+ italian    | 11.2926136363636364
+ mexican    |  9.6975945017182131
+ chinese    |  9.5187165775401070
+ japanese   |  9.3804878048780488
+ vietnamese |  9.2830188679245283
+(6 rows)
+
+
+select type, avg(price) as avg_price
+from meals
+group by 1
+order by type, avg(price) desc;
+
+
+readychef-# order by type, avg(price) desc;
+    type    |      avg_price      
+------------+---------------------
+ chinese    |  9.5187165775401070
+ french     | 11.5420000000000000
+ italian    | 11.2926136363636364
+ japanese   |  9.3804878048780488
+ mexican    |  9.6975945017182131
+ vietnamese |  9.2830188679245283
+(6 rows)
+
+select * 
+from events
+limit 3;
+
+select * 
+from meals
+limit 3;
+
+
+select *
+from users
+limit 3;
+
+
+select e.userid,  u.campaign_id, m.meal_id, m.type, m.price
+from events as e
+
+join users u on e.userid = u.userid
+join meals m on e.meal_id = m.meal_id
+where e.event = 'bought'
+group by 1,2,3,4, 5
+ ; 
+
+select SUM(CASE WHEN event='bought' THEN 1 ELSE 0 END)
+from events
+;
+
+  sum  
+-------
+ 64269
+(1 row)
+
+
+select m.type, SUM(CASE WHEN event='bought' THEN 1 ELSE 0 END)
+from events as e
+join meals as m on e.meal_id = m.meal_id
+group by 1
+;
+
+readychef-# ;
+    type    |  sum  
+------------+-------
+ chinese    |  6267
+ french     | 16179
+ italian    | 22575
+ japanese   |  6921
+ mexican    |  8792
+ vietnamese |  3535
+(6 rows)
+
+
+
+
+
+
